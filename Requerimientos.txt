@@ -1,0 +1,17 @@
+Objetivo: evaluar reglas de negocio, automatización y revisión crítica del apoyo
+generado por IA.
+Consigna para el estudiante:
+Secretaría entrega un Excel con diez solicitudes de inscripción. Construye una
+automatización en UiPath que revise los registros y genere un archivo de resultados
+indicando cuáles pueden procesarse y cuáles requieren corrección.
+Material que preparas: un Excel con columnas Nombre, Cédula, Correo y Carrera.
+Introduce casos con campos vacíos, cédulas repetidas y carreras fuera del catálogo.
+Reglas obligatorias:
+• Nombre y correo no pueden estar vacíos.
+• La cédula debe conservarse como texto y contener exactamente diez dígitos.
+• Las cédulas repetidas deben señalarse.
+• La carrera debe pertenecer al catálogo entregado.
+• Cada registro debe incluir Estado y Motivo.
+Opcional Uso de IA: utilizar AI Studio o Antigravity para proponer la lógica o ayudar a
+resolver un error. Entregar el prompt y explicar una sugerencia aceptada, corregida o
+descartada.

@@ -1,0 +1,97 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Drawing.Primitives</AssemblyReference>
+      <AssemblyReference>System.Drawing.Common</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System.Net.Mail</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Main Sequence" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Default="Data\Input\Solicitudes.xlsx" Name="rutaEntrada" />
+      <Variable x:TypeArguments="x:String" Default="Data\Output" Name="carpetaSalida" />
+      <Variable x:TypeArguments="x:String" Default="Data\Output\Resultados.xlsx" Name="rutaSalida" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtSolicitudes" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtCatalogo" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtResultados" />
+      <Variable x:TypeArguments="x:Int32" Name="totalProcesables" />
+      <Variable x:TypeArguments="x:Int32" Name="totalCorreccion" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <ui:LogMessage DisplayName="Log inicio" Level="Info" Message="[&quot;Validación de solicitudes iniciada: &quot; &amp; rutaEntrada]" sap2010:WorkflowViewState.IdRef="LogMessage_1" />
+    <ui:ReadRange AddHeaders="True" DataTable="[dtSolicitudes]" DisplayName="Leer Excel - Solicitudes" PreserveFormat="False" Range="" SheetName="Solicitudes" WorkbookPath="[rutaEntrada]" sap2010:WorkflowViewState.IdRef="ReadRange_1" />
+    <ui:ReadRange AddHeaders="True" DataTable="[dtCatalogo]" DisplayName="Leer Excel - Catalogo" PreserveFormat="False" Range="" SheetName="Catalogo" WorkbookPath="[rutaEntrada]" sap2010:WorkflowViewState.IdRef="ReadRange_2" />
+    <ui:LogMessage DisplayName="Log lectura" Level="Info" Message="[&quot;Solicitudes leídas: &quot; &amp; dtSolicitudes.Rows.Count.ToString() &amp; &quot; | Carreras en catálogo: &quot; &amp; dtCatalogo.Rows.Count.ToString()]" sap2010:WorkflowViewState.IdRef="LogMessage_2" />
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke ValidarSolicitudes" UnSafe="False" WorkflowFileName="ValidarSolicitudes.xaml" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_Solicitudes">[dtSolicitudes]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_Catalogo">[dtCatalogo]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_Resultados">[dtResultados]</OutArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_TotalProcesables">[totalProcesables]</OutArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_TotalCorreccion">[totalCorreccion]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:CreateDirectory DisplayName="Crear carpeta de salida" Path="[carpetaSalida]" sap2010:WorkflowViewState.IdRef="CreateDirectory_1" />
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GenerarReporte" UnSafe="False" WorkflowFileName="GenerarReporte.xaml" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_Resultados">[dtResultados]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaSalida">[rutaSalida]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:LogMessage DisplayName="Log fin" Level="Info" Message="[&quot;Resultados generados en &quot; &amp; rutaSalida &amp; &quot; | Procesables: &quot; &amp; totalProcesables.ToString() &amp; &quot; | Requieren corrección: &quot; &amp; totalCorreccion.ToString()]" sap2010:WorkflowViewState.IdRef="LogMessage_3" />
+  </Sequence>
+</Activity>

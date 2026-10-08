@@ -1,0 +1,26 @@
+USO DE IA (AI Studio / Antigravity)
+
+PROMPT
+Estoy construyendo una automatización en UiPath Studio (VB.NET, actividades Workbook de Excel).
+Leo un Excel con las columnas Nombre, Cédula, Correo y Carrera, y una hoja "Catalogo" con las carreras válidas.
+Necesito validar cada registro con estas reglas:
+1. Nombre y Correo no pueden estar vacíos.
+2. La cédula debe tener exactamente 10 dígitos.
+3. Las cédulas repetidas deben señalarse.
+4. La carrera debe estar en el catálogo.
+5. Cada registro debe terminar con una columna Estado (Procesable / Requiere corrección) y una columna Motivo.
+Propón la secuencia de actividades y las expresiones VB.NET para cada regla.
+
+
+SUGERENCIA CORREGIDA: validar la cédula convirtiéndola a número
+La IA propuso: Integer.TryParse(row("Cédula").ToString, cedulaNum) AndAlso cedulaNum.ToString.Length = 10
+Problema: las cédulas que empiezan por 0 pierden ese dígito (0912345678 -> 912345678, 9 dígitos) y se
+rechazan aunque sean válidas. Además, la consigna exige conservar la cédula como texto.
+Corrección: la cédula se lee como texto y se valida con Regex.IsMatch(cedula, "^\d{10}$").
+
+
+SUGERENCIA ACEPTADA: detectar cédulas repetidas antes del bucle con GroupBy
+dt.AsEnumerable().Select(Function(r) r("Cédula").ToString().Trim()).Where(Function(c) c <> "") _
+  .GroupBy(Function(c) c).Where(Function(g) g.Count() > 1).Select(Function(g) g.Key).ToList()
+Motivo: recorre la tabla una sola vez y marca todas las ocurrencias (registros 1 y 5), así Secretaría
+ve los dos registros en conflicto.

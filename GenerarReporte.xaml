@@ -1,0 +1,85 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="GenerarReporte" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_Resultados" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_RutaSalida" Type="InArgument(x:String)" />
+  </x:Members>
+  <VisualBasic.Settings>
+    <x:Null />
+  </VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Text.RegularExpressions</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>ClosedXML.Excel</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Drawing.Primitives</AssemblyReference>
+      <AssemblyReference>System.Drawing.Common</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System.Net.Mail</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Text.RegularExpressions</AssemblyReference>
+      <AssemblyReference>ClosedXML</AssemblyReference>
+      <AssemblyReference>DocumentFormat.OpenXml</AssemblyReference>
+      <AssemblyReference>DocumentFormat.OpenXml.Framework</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Generar Reporte" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <ui:InvokeCode ContinueOnError="{x:Null}" Code="' Genera Resultados.xlsx con ClosedXML: hoja Resumen (KPIs + un cuadro por categoría) y hoja Detalle (tabla completa)&#xA;Dim sep As String() = New String() {&quot;; &quot;}&#xA;Dim total As Integer = in_Resultados.Rows.Count&#xA;Dim procesables As Integer = in_Resultados.AsEnumerable().Count(Function(r) r(&quot;Estado&quot;).ToString() = &quot;Procesable&quot;)&#xA;Dim correccion As Integer = total - procesables&#xA;Dim repetidas As Integer = in_Resultados.AsEnumerable().Count(Function(r) r(&quot;Motivo&quot;).ToString().Contains(&quot;Cédula repetida&quot;))&#xA;Dim incidencias As Integer = in_Resultados.AsEnumerable().Where(Function(r) r(&quot;Estado&quot;).ToString() &lt;&gt; &quot;Procesable&quot;).Sum(Function(r) r(&quot;Motivo&quot;).ToString().Split(sep, StringSplitOptions.RemoveEmptyEntries).Length)&#xA;&#xA;Dim wb As New XLWorkbook()&#xA;Dim ws As IXLWorksheet = wb.Worksheets.Add(&quot;Resumen&quot;)&#xA;ws.ShowGridLines = False&#xA;ws.Column(1).Width = 2&#xA;ws.Column(2).Width = 8&#xA;ws.Column(3).Width = 24&#xA;ws.Column(4).Width = 15&#xA;ws.Column(5).Width = 30&#xA;ws.Column(6).Width = 28&#xA;ws.Column(7).Width = 55&#xA;&#xA;' ---- Título ----&#xA;Dim titulo As IXLRange = ws.Range(2, 2, 2, 7).Merge()&#xA;ws.Cell(2, 2).Value = &quot;Reporte de validación de solicitudes de inscripción&quot;&#xA;titulo.Style.Font.Bold = True&#xA;titulo.Style.Font.FontSize = 16&#xA;titulo.Style.Font.FontColor = XLColor.White&#xA;titulo.Style.Fill.BackgroundColor = XLColor.FromHtml(&quot;#1F3864&quot;)&#xA;titulo.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center&#xA;titulo.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center&#xA;ws.Row(2).Height = 30&#xA;Dim subtitulo As IXLRange = ws.Range(3, 2, 3, 7).Merge()&#xA;ws.Cell(3, 2).Value = &quot;Generado el &quot; &amp; DateTime.Now.ToString(&quot;dd/MM/yyyy HH:mm&quot;) &amp; &quot;  |  Detalle completo en la hoja 'Detalle'&quot;&#xA;subtitulo.Style.Font.Italic = True&#xA;subtitulo.Style.Font.FontColor = XLColor.FromHtml(&quot;#595959&quot;)&#xA;subtitulo.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center&#xA;&#xA;' ---- KPIs: 6 tarjetas de 2 columnas, en 2 filas de 3 ----&#xA;Dim kpiNombres As String() = New String() {&quot;Total solicitudes&quot;, &quot;Procesables&quot;, &quot;Requieren corrección&quot;, &quot;% Procesables&quot;, &quot;Registros con cédula repetida&quot;, &quot;Incidencias detectadas&quot;}&#xA;Dim kpiValores As Double() = New Double() {total, procesables, correccion, If(total = 0, 0.0, procesables / CDbl(total)), repetidas, incidencias}&#xA;Dim kpiColores As String() = New String() {&quot;#2F5597&quot;, &quot;#548235&quot;, &quot;#C55A11&quot;, &quot;#2F5597&quot;, &quot;#7030A0&quot;, &quot;#C00000&quot;}&#xA;For k As Integer = 0 To 5&#xA;    Dim filaK As Integer = If(k &lt; 3, 5, 8)&#xA;    Dim colK As Integer = 2 + (k Mod 3) * 2&#xA;    Dim color As XLColor = XLColor.FromHtml(kpiColores(k))&#xA;    Dim etiqueta As IXLRange = ws.Range(filaK, colK, filaK, colK + 1).Merge()&#xA;    ws.Cell(filaK, colK).Value = kpiNombres(k)&#xA;    etiqueta.Style.Fill.BackgroundColor = color&#xA;    etiqueta.Style.Font.FontColor = XLColor.White&#xA;    etiqueta.Style.Font.Bold = True&#xA;    etiqueta.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center&#xA;    Dim valor As IXLRange = ws.Range(filaK + 1, colK, filaK + 1, colK + 1).Merge()&#xA;    ws.Cell(filaK + 1, colK).Value = kpiValores(k)&#xA;    If k = 3 Then valor.Style.NumberFormat.Format = &quot;0.0%&quot;&#xA;    valor.Style.Font.Bold = True&#xA;    valor.Style.Font.FontSize = 22&#xA;    valor.Style.Font.FontColor = color&#xA;    valor.Style.Fill.BackgroundColor = XLColor.FromHtml(&quot;#F2F2F2&quot;)&#xA;    valor.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center&#xA;    valor.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center&#xA;    ws.Row(filaK + 1).Height = 34&#xA;    Dim tarjeta As IXLRange = ws.Range(filaK, colK, filaK + 1, colK + 1)&#xA;    tarjeta.Style.Border.OutsideBorder = XLBorderStyleValues.Medium&#xA;    tarjeta.Style.Border.OutsideBorderColor = color&#xA;Next&#xA;&#xA;' ---- Categorías: primero las listas para procesar, luego cada motivo en orden fijo, luego motivos no previstos ----&#xA;Dim orden As New List(Of String) From {&quot;Sin observaciones&quot;, &quot;Cédula repetida&quot;, &quot;Nombre vacío&quot;, &quot;Correo vacío&quot;, &quot;Cédula vacía&quot;, &quot;Cédula debe tener exactamente 10 dígitos&quot;, &quot;Carrera vacía&quot;, &quot;Carrera fuera del catálogo&quot;}&#xA;Dim colores As New Dictionary(Of String, String) From {{&quot;Sin observaciones&quot;, &quot;#548235&quot;}, {&quot;Cédula repetida&quot;, &quot;#7030A0&quot;}, {&quot;Nombre vacío&quot;, &quot;#C00000&quot;}, {&quot;Correo vacío&quot;, &quot;#C00000&quot;}, {&quot;Cédula vacía&quot;, &quot;#C55A11&quot;}, {&quot;Cédula debe tener exactamente 10 dígitos&quot;, &quot;#C55A11&quot;}, {&quot;Carrera vacía&quot;, &quot;#BF8F00&quot;}, {&quot;Carrera fuera del catálogo&quot;, &quot;#BF8F00&quot;}}&#xA;Dim encontrados As List(Of String) = in_Resultados.AsEnumerable().SelectMany(Function(r) r(&quot;Motivo&quot;).ToString().Split(sep, StringSplitOptions.RemoveEmptyEntries)).Distinct().ToList()&#xA;Dim categorias As List(Of String) = orden.Where(Function(c) encontrados.Contains(c)).Concat(encontrados.Where(Function(c) Not orden.Contains(c))).ToList()&#xA;&#xA;Dim seccion As IXLRange = ws.Range(11, 2, 11, 7).Merge()&#xA;ws.Cell(11, 2).Value = &quot;Registros agrupados por categoría&quot;&#xA;seccion.Style.Font.Bold = True&#xA;seccion.Style.Font.FontSize = 13&#xA;seccion.Style.Font.FontColor = XLColor.FromHtml(&quot;#1F3864&quot;)&#xA;seccion.Style.Border.BottomBorder = XLBorderStyleValues.Medium&#xA;seccion.Style.Border.BottomBorderColor = XLColor.FromHtml(&quot;#1F3864&quot;)&#xA;&#xA;Dim encabezados As String() = New String() {&quot;Fila&quot;, &quot;Nombre&quot;, &quot;Cédula&quot;, &quot;Correo&quot;, &quot;Carrera&quot;, &quot;Motivo(s)&quot;}&#xA;Dim fila As Integer = 13&#xA;For Each categoria As String In categorias&#xA;    Dim cat As String = categoria&#xA;    Dim indices As List(Of Integer) = Enumerable.Range(0, total).Where(Function(x) in_Resultados.Rows(x)(&quot;Motivo&quot;).ToString().Split(sep, StringSplitOptions.RemoveEmptyEntries).Contains(cat)).ToList()&#xA;    Dim color As XLColor = XLColor.FromHtml(If(colores.ContainsKey(cat), colores(cat), &quot;#404040&quot;))&#xA;    Dim inicio As Integer = fila&#xA;&#xA;    Dim cabecera As IXLRange = ws.Range(fila, 2, fila, 7).Merge()&#xA;    ws.Cell(fila, 2).Value = If(cat = &quot;Sin observaciones&quot;, &quot;Sin observaciones - listos para procesar&quot;, cat) &amp; &quot;   (&quot; &amp; indices.Count.ToString() &amp; &quot;)&quot;&#xA;    cabecera.Style.Fill.BackgroundColor = color&#xA;    cabecera.Style.Font.FontColor = XLColor.White&#xA;    cabecera.Style.Font.Bold = True&#xA;    cabecera.Style.Font.FontSize = 12&#xA;    ws.Row(fila).Height = 22&#xA;    cabecera.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center&#xA;    fila += 1&#xA;&#xA;    For c As Integer = 0 To encabezados.Length - 1&#xA;        ws.Cell(fila, 2 + c).Value = encabezados(c)&#xA;    Next&#xA;    Dim filaEnc As IXLRange = ws.Range(fila, 2, fila, 7)&#xA;    filaEnc.Style.Font.Bold = True&#xA;    filaEnc.Style.Fill.BackgroundColor = XLColor.FromHtml(&quot;#D9D9D9&quot;)&#xA;    fila += 1&#xA;&#xA;    For Each idx As Integer In indices&#xA;        Dim reg As DataRow = in_Resultados.Rows(idx)&#xA;        ws.Cell(fila, 2).Value = CDbl(idx + 2)&#xA;        ws.Cell(fila, 3).Value = reg(&quot;Nombre&quot;).ToString()&#xA;        ws.Cell(fila, 4).Style.NumberFormat.Format = &quot;@&quot;&#xA;        ws.Cell(fila, 4).Value = reg(&quot;Cédula&quot;).ToString()&#xA;        ws.Cell(fila, 5).Value = reg(&quot;Correo&quot;).ToString()&#xA;        ws.Cell(fila, 6).Value = reg(&quot;Carrera&quot;).ToString()&#xA;        ws.Cell(fila, 7).Value = reg(&quot;Motivo&quot;).ToString()&#xA;        If (fila - inicio) Mod 2 = 1 Then ws.Range(fila, 2, fila, 7).Style.Fill.BackgroundColor = XLColor.FromHtml(&quot;#F7F7F7&quot;)&#xA;        fila += 1&#xA;    Next&#xA;&#xA;    Dim cuadro As IXLRange = ws.Range(inicio, 2, fila - 1, 7)&#xA;    cuadro.Style.Border.InsideBorder = XLBorderStyleValues.Thin&#xA;    cuadro.Style.Border.InsideBorderColor = XLColor.FromHtml(&quot;#D9D9D9&quot;)&#xA;    cuadro.Style.Border.OutsideBorder = XLBorderStyleValues.Medium&#xA;    cuadro.Style.Border.OutsideBorderColor = color&#xA;    ws.Range(inicio + 1, 2, fila - 1, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center&#xA;    ws.Range(inicio + 2, 7, fila - 1, 7).Style.Alignment.WrapText = True&#xA;    fila += 1&#xA;Next&#xA;ws.Cell(fila, 2).Value = &quot;Nota: un registro con varios motivos aparece en cada cuadro que le corresponde. 'Fila' es la fila del Excel de origen.&quot;&#xA;ws.Cell(fila, 2).Style.Font.Italic = True&#xA;ws.Cell(fila, 2).Style.Font.FontColor = XLColor.FromHtml(&quot;#7F7F7F&quot;)&#xA;&#xA;' ---- Hoja Detalle: tabla completa con filtros ----&#xA;Dim wd As IXLWorksheet = wb.Worksheets.Add(&quot;Detalle&quot;)&#xA;wd.Column(2).Style.NumberFormat.Format = &quot;@&quot;&#xA;Dim tabla As IXLTable = wd.Cell(1, 1).InsertTable(in_Resultados, &quot;TablaDetalle&quot;, True)&#xA;tabla.Theme = XLTableTheme.TableStyleMedium2&#xA;Dim anchos As Double() = New Double() {24, 15, 30, 28, 22, 55}&#xA;For c As Integer = 0 To Math.Min(anchos.Length, in_Resultados.Columns.Count) - 1&#xA;    wd.Column(c + 1).Width = anchos(c)&#xA;Next&#xA;Dim colEstado As Integer = in_Resultados.Columns.IndexOf(&quot;Estado&quot;) + 1&#xA;For n As Integer = 0 To total - 1&#xA;    Dim celda As IXLCell = wd.Cell(n + 2, colEstado)&#xA;    celda.Style.Font.Bold = True&#xA;    celda.Style.Font.FontColor = If(celda.GetString() = &quot;Procesable&quot;, XLColor.FromHtml(&quot;#548235&quot;), XLColor.FromHtml(&quot;#C55A11&quot;))&#xA;Next&#xA;wd.SheetView.FreezeRows(1)&#xA;&#xA;wb.SaveAs(in_RutaSalida)" DisplayName="Crear Excel con KPIs y cuadros por categoría" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_Resultados">[in_Resultados]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaSalida">[in_RutaSalida]</InArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+  </Sequence>
+</Activity>
